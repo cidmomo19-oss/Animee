@@ -1,70 +1,52 @@
 import { useState, useEffect } from 'react';
-import { Search, Play } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Navbar from './Navbar';
+import { Play } from 'lucide-react';
 
 export default function App() {
   const [animes, setAnimes] = useState([]);
 
   useEffect(() => {
-    fetch('/api/animes')
-      .then(res => res.json())
-      .then(data => setAnimes(data));
+    fetch('/api/animes').then(res => res.json()).then(data => setAnimes(data));
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#050810] text-slate-100 font-sans pb-10">
-      {/* Header Minimalis */}
-      <header className="sticky top-0 z-50 bg-[#050810]/80 backdrop-blur-lg border-b border-white/5 px-6 py-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-black tracking-tighter bg-gradient-to-r from-indigo-500 to-cyan-400 bg-clip-text text-transparent">
-          NIMEPAMER.
-        </Link>
-        <Link to="/search" className="p-3 bg-white/5 hover:bg-white/10 rounded-full transition-all border border-white/10">
-          <Search className="w-5 h-5 text-indigo-400" />
-        </Link>
-      </header>
+    <div className="min-h-screen bg-[#0b1120] pb-32 text-slate-100">
+      <Navbar />
+      
+      {/* Hero Section Simple */}
+      <section className="p-6 pt-10">
+        <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[3rem] p-8 relative overflow-hidden shadow-2xl shadow-indigo-500/20">
+          <div className="relative z-10">
+            <h1 className="text-4xl font-black mb-2 leading-tight">Nonton Anime<br/>Tanpa Iklan.</h1>
+            <p className="text-indigo-100 text-sm opacity-80 mb-6">Koleksi pribadi buat pamer doang bang.</p>
+            <button className="bg-white text-indigo-600 px-6 py-3 rounded-full font-bold text-sm shadow-xl">Mulai Nonton</button>
+          </div>
+          <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        </div>
+      </section>
 
-      <main className="max-w-4xl mx-auto px-4 mt-8">
-        {/* Section Title */}
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold tracking-tight">Update <span className="text-indigo-500">Terbaru</span></h2>
-          <div className="h-[1px] flex-1 bg-gradient-to-r from-indigo-500/50 to-transparent ml-4"></div>
+      {/* Grid Anime */}
+      <main className="p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-bold flex items-center gap-2">
+            <span className="w-1.5 h-6 bg-indigo-500 rounded-full"></span> Terupdate
+          </h2>
         </div>
 
-        {/* Grid 3 Kolom - Besar & Profesional */}
-        <div className="grid grid-cols-3 gap-4 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-5">
           {animes.map((anime) => (
             <div key={anime.id} className="group cursor-pointer">
-              {/* Poster Container */}
-              <div className="relative aspect-[2/3] rounded-[2rem] overflow-hidden shadow-2xl border border-white/5 group-hover:border-indigo-500/50 transition-all duration-500">
-                <img 
-                  src={anime.poster_url} 
-                  alt={anime.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                {/* Glassmorphism Badge */}
-                <div className="absolute top-3 right-3 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-bold text-white uppercase tracking-wider">
-                  {anime.type}
-                </div>
-                {/* Play Button Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050810] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/40">
-                    <Play className="w-6 h-6 fill-white text-white ml-1" />
-                  </div>
-                </div>
+              <div className="relative aspect-[3/4] rounded-[2rem] overflow-hidden mb-3 shadow-lg border border-white/5">
+                <img src={anime.poster_url || 'https://via.placeholder.com/300x400'} alt={anime.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60"></div>
+                <div className="absolute top-3 right-3 bg-indigo-500 text-[10px] font-black px-3 py-1 rounded-full shadow-lg border border-white/20 uppercase tracking-wider">{anime.type}</div>
               </div>
-              {/* Title & Info */}
-              <div className="mt-4 px-2">
-                <h3 className="font-bold text-sm md:text-base line-clamp-1 group-hover:text-indigo-400 transition-colors">
-                  {anime.title}
-                </h3>
-                <p className="text-[11px] md:text-xs text-slate-500 mt-1 font-medium tracking-wide">
-                  {anime.status.toUpperCase()}
-                </p>
-              </div>
+              <h3 className="font-bold text-sm line-clamp-1 group-hover:text-indigo-400 transition-colors px-2">{anime.title}</h3>
+              <p className="text-[11px] text-slate-500 mt-0.5 px-2 font-medium">{anime.status}</p>
             </div>
           ))}
         </div>
       </main>
     </div>
-  )
+  );
 }
